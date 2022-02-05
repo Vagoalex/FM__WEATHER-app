@@ -1,27 +1,11 @@
-const UI = {
-	INPUT: document.querySelector('.input'),
-	SEARCH: document.querySelector('.search'),
-	TAB_BTN: document.querySelectorAll('.tab'),
-	SCREENS: document.querySelectorAll('.screen'),
-	LIKE: document.querySelector('.now_city-like'),
-	LOCATIONS: document.querySelector('.locations_cityes'),
-};
-const NOW = {
-	TEMP: document.querySelector('.now_gradus'),
-	IMG: document.querySelector('.now_img'),
-	NAME: document.querySelector('.now_city-show'),
-};
-const ALERT = {
-	NOT_FOUND_MESSAGE: document.querySelector('.alert-city--disabled'),
-};
-const DETAILS = {
-	TEMP: document.querySelector('.temperValue'),
-	FEELS_LIKE: document.querySelector('.feelsValue'),
-	NAME: document.querySelector('.details_name'),
-	WEATHER: document.querySelector('.weatherValue'),
-	SUNRISE: document.querySelector('.sunriseValue'),
-	SUNSET: document.querySelector('.sunsetValue'),
-};
+import { UI } from './UI_elements/UI.js';
+import { NOW } from './UI_elements/NOW.js';
+import { DETAILS } from './UI_elements/DETAILS.js';
+import { showAlertEmptyInput } from './libs/showAlertEmptyInput.js';
+import { getDate } from './libs/getDate.js';
+// switch TABS
+import { switchTabs } from './libs/switchTabs.js';
+switchTabs();
 
 const URL = {
 	WEATHER: 'http://api.openweathermap.org/data/2.5/weather',
@@ -29,31 +13,35 @@ const URL = {
 	API_KEY: '0a2d47739719cf635e851d4466971dd4',
 };
 
+// const ALERT = {
+// 	NOT_FOUND_MESSAGE: document.querySelector('.alert-city--disabled'),
+// };
+// async function alertMessage() {
+// 	ALERT.NOT_FOUND_MESSAGE.classList.remove('alert-city--disabled');
+// 	ALERT.NOT_FOUND_MESSAGE.classList.add('alert-city--active');
+// 	await setTimeout(() => {
+// 		ALERT.NOT_FOUND_MESSAGE.classList.remove('alert-city--disabled');
+// 	}, 2000);
+// }
+
 UI.SEARCH.addEventListener('click', event => {
 	event.preventDefault();
 	const emptyInput = UI.INPUT.value == '';
 	if (emptyInput) {
-		showAlertEmptyInput();
+		showAlertEmptyInput(UI.INPUT);
 		return;
 	}
 	fetchWeather(UI.INPUT.value);
 });
-
-function showAlertEmptyInput() {
-	UI.INPUT.classList.add('errorEmptyInput');
-	setTimeout(() => {
-		UI.INPUT.classList.remove('errorEmptyInput');
-	}, 250);
-}
 
 async function fetchWeather(cityName) {
 	const url = `${URL.WEATHER}?q=${cityName}&appid=${URL.API_KEY}&units=metric`;
 	let response = await fetch(url);
 	let result = await response.json();
 	try {
-		// if (!result.name) {
-		// 	throw new Error('This city is not found!');
-		// }
+		if (!result.name) {
+			throw new Error('This city is not found!');
+		}
 		console.log(result);
 		let data = {
 			name: result.name,
@@ -66,20 +54,12 @@ async function fetchWeather(cityName) {
 		};
 		renderWeather(data);
 	} catch (error) {
-		await alertMessage();
-		// alert(error.message);
+		alert(error.message);
 	} finally {
 		UI.INPUT.value = '';
 	}
 }
 
-async function alertMessage() {
-	ALERT.NOT_FOUND_MESSAGE.classList.remove('alert-city--disabled');
-	ALERT.NOT_FOUND_MESSAGE.classList.add('alert-city--active');
-	await setTimeout(() => {
-		ALERT.NOT_FOUND_MESSAGE.classList.remove('alert-city--disabled');
-	}, 2000);
-}
 function renderWeather(data) {
 	NOW.NAME.textContent = data.name;
 	NOW.TEMP.textContent = Math.round(data.temp);
@@ -95,12 +75,6 @@ function renderWeather(data) {
 	const sunset = data.sunset;
 	DETAILS.SUNRISE.textContent = getDate(sunrise);
 	DETAILS.SUNSET.textContent = getDate(sunset);
-}
-
-function getDate(par) {
-	let date = new Date(par * 1000);
-	let timestr = `${date.getHours()}:${date.getMinutes()}`;
-	return timestr;
 }
 
 let favoriteCities = [];
@@ -125,8 +99,6 @@ function addFavorites() {
 		renderFavorites();
 	});
 }
-addFavorites();
-
 function renderFavorites() {
 	UI.LOCATIONS.innerHTML = '';
 	favoriteCities.forEach(item => {
@@ -136,16 +108,14 @@ function renderFavorites() {
 	});
 	localStorage.setItem('favoriteCities', JSON.stringify(favoriteCities));
 }
+addFavorites();
 
 UI.LOCATIONS.addEventListener('click', e => {
 	let btnDelete = document.querySelectorAll('.city-delete');
 	let spanCity = e.target;
-	fetchWeather(spanCity.textContent);
+
 	let getStorage = JSON.parse(localStorage.getItem('favoriteCities'));
-	// console.log(spanCity.textContent);
-	// let newStorage = getStorage.filter(city => city !== spanCity.textContent);
-	// console.log(newStorage);
-	localStorage.setItem('favoriteCities', JSON.stringify(getStorage.filter(city => city !== spanCity.parentNode.textContent)));
+	// console.log(UI.LOCATIONS.children);
 
 	btnDelete.forEach(item => {
 		if (spanCity !== item) {
@@ -154,33 +124,23 @@ UI.LOCATIONS.addEventListener('click', e => {
 			spanCity.parentNode.remove();
 		}
 	});
+
+	localStorage.setItem('favoriteCities', JSON.stringify(getStorage.filter(city => city !== spanCity.parentNode.textContent)));
 });
-// switch TABS
-UI.TAB_BTN.forEach(item => {
-	item.addEventListener('click', () => {
-		let currentTab = item;
-		let tabID = currentTab.getAttribute('data-tab');
-		let currentScreen = document.querySelector(tabID);
-
-		if (!currentTab.classList.contains('tab-active')) {
-			UI.TAB_BTN.forEach(elem => {
-				elem.classList.remove('tab-active');
-			});
-
-			UI.SCREENS.forEach(elem => {
-				elem.classList.remove('active');
-			});
-
-			currentTab.classList.add('tab-active');
-			currentScreen.classList.add('active');
+// console.log(UI.LOCATIONS);
+function fetchFavorits() {
+	UI.LOCATIONS.addEventListener('click', e => {
+		let spanCity = e.target;
+		if (spanCity == spanCity.parentElement) {
+			fetchWeather(spanCity.textContent);
 		}
 	});
-});
-
-document.querySelector('.tab').click();
-
-// window.onclick = elem => {
-// 	console.log(elem.target);
-// };
-
-// console.log(favoriteCities);
+}
+fetchFavorits();
+// function fetchFavorites(params) {
+// 	UI.LOCATIONS.addEventListener('click', e => {
+// 		let spanCity = e.target;
+// 		console.log(spanCity.lastElementChild);
+// 	});
+// }
+// fetchFavorites();
