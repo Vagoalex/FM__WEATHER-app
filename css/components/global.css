@@ -1,0 +1,36 @@
+/* ============BODY STYLES================================================================================================ */
+body {
+	font-family: 'Roboto', sans-serif;
+	font-style: normal;
+	font-size: 24px;
+	line-height: 28px;
+	font-weight: 400;
+	min-width: 320px;
+	position: relative;
+	overflow-x: hidden;
+	align-items: center;
+	text-align: center;
+	min-height: 100vh;
+	background: #000000;
+}
+img {
+	max-width: 100%;
+}
+.main {
+	font-family: 'Roboto', sans-serif;
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+.wrapper {
+	width: 600px;
+	margin: 0 auto;
+}
+
+.page {
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+/* ============BODY STYLES END================================================================================================ */

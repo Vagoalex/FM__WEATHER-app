@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<!-- <base href="/"> -->
+		<title>FRONTEND_MARATHON</title>
+		<meta name="description" content="IT-Marathon" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Work+Sans:wght@300;400&display=swap" rel="stylesheet" />
+
+		<link rel="stylesheet" href="css/null.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/media.css" />
+	</head>
+
+	<body>
+		<div class="page">
+			<header class="header">WEATHER APP</header>
+			<main class="main">
+				<div class="wrapper">
+					<div class="main-input">
+						<form class="form">
+							<input class="input" type="text" placeholder="Enter the city" maxlength="38" />
+							<button class="search" type="submit"></button>
+						</form>
+					</div>
+
+					<div class="container">
+						<div class="alert-city alert-city--disabled">
+							<p>This city is not found</p>
+							<p>Please, enter another city name</p>
+						</div>
+						<div class="main-container">
+							<div id="tab-now" class="now screen active">
+								<p class="now_gradus">0<span>&deg;</span></p>
+								<span class="now_img"></span>
+								<div class="now_city">
+									<p class="now_city-show">Name of city</p>
+									<span class="now_city-like"></span>
+								</div>
+							</div>
+							<div id="tab-details" class="details screen">
+								<div class="details_name">Name of city</div>
+								<div class="details_about">
+									<p class="details_about-text" id="temperature">Temperature: <span class="temperValue">0</span>&deg;</p>
+									<p class="details_about-text" id="feels">Feels like: <span class="feelsValue">0</span>&deg;</p>
+									<p class="details_about-text" id="weather">Weather: <span class="weatherValue">None</span></p>
+									<p class="details_about-text" id="sunrise">Sunrise: <span class="sunriseValue">05:00</span></p>
+									<p class="details_about-text" id="sunset">Sunset: <span class="sunsetValue">18:00</span></p>
+								</div>
+							</div>
+							<div id="tab-forecast" class="forecast screen">
+								<div class="forecast_name">Name of city</div>
+								<div class="forecast_days">
+									<div class="day">
+										<div class="date-time">
+											<p class="date">23 December</p>
+											<p class="time-1">12:00</p>
+										</div>
+										<div class="day-weather">
+											<div class="weather_forecast">
+												<p class="weather_temperature">Temperature: <span class="temperValue">0</span>&deg;</p>
+												<p class="weather_feelsLike">Feels like: <span class="feelsValue">0</span>&deg;</p>
+											</div>
+											<div class="weather_condition">
+												<p class="condition-title">Сondition</p>
+												<span class="condition_img"></span>
+											</div>
+										</div>
+									</div>
+									<div class="day">
+										<div class="date-time">
+											<p class="date">23 December</p>
+											<p class="time-2">15:00</p>
+										</div>
+										<div class="day-weather">
+											<div class="weather_forecast">
+												<p class="weather_temperature">Temperature: <span class="temperValue">0</span>&deg;</p>
+												<p class="weather_feelsLike">Feels like: <span class="feelsValue">0</span>&deg;</p>
+											</div>
+											<div class="weather_condition">
+												<p class="condition-title">Сondition</p>
+												<span class="condition_img"></span>
+											</div>
+										</div>
+									</div>
+									<div class="day">
+										<div class="date-time">
+											<p class="date">23 December</p>
+											<p class="time-3">18:00</p>
+										</div>
+										<div class="day-weather">
+											<div class="weather_forecast">
+												<p class="weather_temperature">Temperature: <span class="temperValue">0</span>&deg;</p>
+												<p class="weather_feelsLike">Feels like: <span class="feelsValue">0</span>&deg;</p>
+											</div>
+											<div class="weather_condition">
+												<p class="condition-title">Сondition</p>
+												<span class="condition_img"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="section-tab">
+								<button data-tab="#tab-now" class="tab">Now</button>
+								<button data-tab="#tab-details" class="tab">Details</button>
+								<button data-tab="#tab-forecast" class="tab">Forecast</button>
+							</div>
+						</div>
+
+						<div class="locations">
+							<div class="locations_title">Added Locations:</div>
+							<div class="locations_cityes"></div>
+						</div>
+					</div>
+				</div>
+			</main>
+			<footer class="footer">VAGO ALEKSANDR (@vagoalex)</footer>
+		</div>
+
+		<script type="module" src="js/main.js"></script>
+	</body>
+</html>
+
+<!-- <p class="city">Kazan’<span class="city-delete"></span></p> -->
