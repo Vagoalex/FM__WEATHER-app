@@ -1,17 +1,11 @@
-import { UI } from './UI_elements/UI.js';
-import { NOW } from './UI_elements/NOW.js';
-import { DETAILS } from './UI_elements/DETAILS.js';
-import { showAlertEmptyInput } from './libs/showAlertEmptyInput.js';
-import { getDate } from './libs/getDate.js';
+import { UI, URL, NOW, DETAILS } from './view/UI.js';
+import { showAlertEmptyInput } from './view/view.js';
+import { renderDate } from './libs/renderDate.js';
 // switch TABS
 import { switchTabs } from './libs/switchTabs.js';
+// storage
+import { storage } from './libs/storage.js';
 switchTabs();
-
-const URL = {
-	WEATHER: 'http://api.openweathermap.org/data/2.5/weather',
-	FORECAST: 'http://api.openweathermap.org/data/2.5/forecast',
-	API_KEY: '0a2d47739719cf635e851d4466971dd4',
-};
 
 // const ALERT = {
 // 	NOT_FOUND_MESSAGE: document.querySelector('.alert-city--disabled'),
@@ -39,7 +33,7 @@ async function fetchWeather(cityName) {
 	let response = await fetch(url);
 	let result = await response.json();
 	try {
-		if (!result.name) {
+		if (!result.statusText !== 'OK') {
 			throw new Error('This city is not found!');
 		}
 		console.log(result);
@@ -56,7 +50,7 @@ async function fetchWeather(cityName) {
 	} catch (error) {
 		alert(error.message);
 	} finally {
-		UI.INPUT.value = '';
+		UI.FORM.reset();
 	}
 }
 
@@ -73,70 +67,96 @@ function renderWeather(data) {
 	DETAILS.SUNSET.textContent = data.sunset;
 	const sunrise = data.sunrise;
 	const sunset = data.sunset;
-	DETAILS.SUNRISE.textContent = getDate(sunrise);
-	DETAILS.SUNSET.textContent = getDate(sunset);
+	DETAILS.SUNRISE.textContent = renderDate(sunrise);
+	DETAILS.SUNSET.textContent = renderDate(sunset);
 }
 
-let favoriteCities = [];
-if (localStorage.getItem('favoriteCities') != undefined) {
-	favoriteCities = JSON.parse(localStorage.getItem('favoriteCities'));
-	renderFavorites();
-}
+// if (localStorage.getItem('favoriteCities') != undefined) {
+// 	favoriteCities = JSON.parse(localStorage.getItem('favoriteCities'));
+// 	renderFavorites();
+// }
+let favorList = storage.getStorage();
 
+// storage.getStorage(favorList);
+
+UI.LIKE.addEventListener('click', addFavorites);
 function addFavorites() {
-	UI.LIKE.addEventListener('click', () => {
-		const currentCity = NOW.NAME.textContent;
-		const favoriteIncludeCity = favoriteCities.includes(currentCity);
-		const emptyInput = currentCity == '' || currentCity == 'Name of city';
+	const currentCity = NOW.NAME.textContent;
+	const isEmptyInput = currentCity == '' || currentCity == 'Name of city';
+	if (isEmptyInput) {
+		alert('This city is not valid!');
+	} else {
+		// UI.LOCATIONS.innerHTML += createTemplate(currentCity);
+		favorList.push(currentCity);
+		// storage.setStorage(favorList);
+		displayCity(UI.LOCATIONS, favorList);
 
-		if (favoriteIncludeCity) {
-			alert('This city already exists in favorites!');
-		} else if (emptyInput) {
-			alert('This city is not valid!');
-		} else {
-			favoriteCities.push(currentCity);
-		}
-		renderFavorites();
-	});
+		// UI.LOCATIONS.innerHTML += createTemplate(currentCity);
+	}
+
+	function displayCity(cityList, favorArray) {
+		cityList.innerHTML = '';
+		cityList.innerHTML = favorArray
+			.map(city => {
+				return `<p class="city">${city}<span class="city-delete"></span></p>`;
+			})
+			.join('');
+		storage.setStorage(favorList);
+		// return `<p class="city">${city}<span class="city-delete"></span></p>`;
+	}
+
+	// if (favoriteIncludeCity) {
+	// 	alert('This city already exists in favorites!');
+	// } else if (emptyInput) {
+	// 	alert('This city is not valid!');
+	// 	// МОЖНО ВСТАВИТЬ ФУНКЦИЮ НА UI VIEW
+	// } else {
+	// 	favoriteCities.push(currentCity);
+	// }
+	// renderFavoriteCities();
+	// createTemplate(currentCity);
+	// storage.setStorage(favorList, currentCity);
 }
+
+// function renderFavoriteCities(city) {
+// 	// for (let item of UI.LOCATIONS.children) {
+// 	// 	if (item === city) {
+// 	//
+// 	// 	} else {
+// 	// 		return;
+// 	// 	}
+// 	// }
+// }
+
 function renderFavorites() {
 	UI.LOCATIONS.innerHTML = '';
-	favoriteCities.forEach(item => {
-		const addedCity = `
+	favorList.forEach(item => {
+		const addedCity = `;
 		<p class="city">${item}<span class="city-delete"></span></p>`;
 		UI.LOCATIONS.insertAdjacentHTML('beforeend', addedCity);
 	});
-	localStorage.setItem('favoriteCities', JSON.stringify(favoriteCities));
+	localStorage.setItem('favoriteCities', JSON.stringify([...favoriteCities]));
 }
-addFavorites();
 
-UI.LOCATIONS.addEventListener('click', e => {
-	let btnDelete = document.querySelectorAll('.city-delete');
-	let spanCity = e.target;
+// UI.LOCATIONS.addEventListener('click', e => {
+// 	let btnDelete = document.querySelectorAll('.city-delete');
+// 	let spanCity = e.target;
 
-	let getStorage = JSON.parse(localStorage.getItem('favoriteCities'));
-	// console.log(UI.LOCATIONS.children);
+// 	let getStorage = JSON.parse(localStorage.getItem('favoriteCities'));
+// 	// console.log(UI.LOCATIONS.children);
 
-	btnDelete.forEach(item => {
-		if (spanCity !== item) {
-			return;
-		} else {
-			spanCity.parentNode.remove();
-		}
-	});
+// 	btnDelete.forEach(item => {
+// 		if (spanCity !== item) {
+// 			return;
+// 		} else {
+// 			spanCity.parentNode.remove();
+// 		}
+// 	});
 
-	localStorage.setItem('favoriteCities', JSON.stringify(getStorage.filter(city => city !== spanCity.parentNode.textContent)));
-});
+// 	localStorage.setItem('favoriteCities', JSON.stringify([...getStorage.filter(city => city !== spanCity.parentNode.textContent)]));
+// });
 // console.log(UI.LOCATIONS);
-function fetchFavorits() {
-	UI.LOCATIONS.addEventListener('click', e => {
-		let spanCity = e.target;
-		if (spanCity == spanCity.parentElement) {
-			fetchWeather(spanCity.textContent);
-		}
-	});
-}
-fetchFavorits();
+
 // function fetchFavorites(params) {
 // 	UI.LOCATIONS.addEventListener('click', e => {
 // 		let spanCity = e.target;
@@ -144,3 +164,4 @@ fetchFavorits();
 // 	});
 // }
 // fetchFavorites();
+displayCity(UI.LOCATIONS, favorList);
