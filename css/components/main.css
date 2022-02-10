@@ -114,6 +114,10 @@
 	background-image: url('../../img/like-hover.svg');
 	transition: 0.3s;
 }
+.now_city-like:active {
+	background-image: url('../../img/like-toggle.svg');
+	transition: 0.1s;
+}
 .now_city-like-active {
 	background-image: url('../../img/like-active.svg');
 }
