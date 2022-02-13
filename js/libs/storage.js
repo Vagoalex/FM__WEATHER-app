@@ -8,16 +8,12 @@
 // 		return JSON.parse(localStorage.getItem('favorCities') || '[]');
 // 	},
 // };
-
-export const storage = {
-	favorList: [],
+export { storage, favorList };
+let favorList = new Set();
+const storage = {
 	setStorage(city) {
-		if (!this.favorList.includes(city)) {
-			this.favorList.push(city);
-			localStorage.setItem('favorCities', JSON.stringify(this.favorList));
-		} else {
-			return;
-		}
+		favorList.add(city);
+		localStorage.setItem('favorCities', JSON.stringify([...favorList]));
 	},
 	getStorage() {
 		return JSON.parse(localStorage.getItem('favorCities')) || [];
@@ -25,10 +21,7 @@ export const storage = {
 	saveFavorCity(data) {
 		localStorage.setItem('favoriteCity', JSON.stringify(data));
 	},
-	saveFavorCities() {
-		localStorage.setItem('favorCities', JSON.stringify(this.favorList));
-	},
-	getFavorCity() {
-		return JSON.parse(localStorage.getItem('favorCities')) || [];
+	saveStorage(array) {
+		localStorage.setItem('favorCities', JSON.stringify([...array]));
 	},
 };

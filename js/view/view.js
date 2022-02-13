@@ -1,7 +1,7 @@
 import { UI } from './UI.js';
-import { storage } from '../libs/storage.js';
+import { storage, favorList } from '../libs/storage.js';
 import { fetchWeather, renderWeather } from '../libs/fetchWeather.js';
-export { addFavorites, displayCity, deleteCity, fetchSelectedCity };
+export { addFavorites, displayCity, fetchOrDeleteCity };
 
 function addFavorites() {
 	const currentCity = UI.NOW.NAME.textContent;
@@ -15,32 +15,27 @@ function addFavorites() {
 }
 function displayCity() {
 	UI.GLOBAL.LOCATIONS.innerHTML = '';
-	storage.favorList.forEach(city => {
+	// или же storage.getStorage();? снизу перед форычем
+	[...favorList].forEach(city => {
 		const newCity = `
 		<p class="city">${city}<span class="city-delete"></span></p>`;
 		UI.GLOBAL.LOCATIONS.insertAdjacentHTML('beforeend', newCity);
 	});
-	storage.getStorage();
 }
 
-function deleteCity() {
-	const deleteCityBtn = document.querySelectorAll('.city-delete');
-	deleteCityBtn.forEach((item, index) => {
-		item.addEventListener('click', e => {
-			item.parentNode.remove();
-			storage.favorList.splice(index, 1);
-			storage.saveFavorCities();
-		});
-	});
+function deleteCity(e) {
+	const currentCity = e.target.parentNode;
+	currentCity.remove();
+	storage.saveStorage([...favorList].filter(city => city !== currentCity.textContent));
 }
 
-function fetchSelectedCity() {
+function fetchOrDeleteCity() {
 	UI.GLOBAL.LOCATIONS.addEventListener('click', e => {
-		const cityDelete = e.target.getAttribute('city-delete');
-		if (!cityDelete && !null) {
+		const cityDeleteSpan = e.target.tagName == 'SPAN';
+		if (!cityDeleteSpan) {
 			fetchWeather(e.target.textContent);
+		} else {
+			deleteCity(e);
 		}
 	});
 }
-
-//TODO: fix deleteCity and fetchSelectedCity. Don't working fetchSelectedCity
