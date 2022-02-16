@@ -8,7 +8,7 @@
 // 		return JSON.parse(localStorage.getItem('favorCities') || '[]');
 // 	},
 // };
-export { storage, favorList };
+export { storage, favorList, setCookie };
 let favorList = new Set();
 const storage = {
 	setStorage(city) {
@@ -25,3 +25,8 @@ const storage = {
 		localStorage.setItem('favorCities', JSON.stringify([...array]));
 	},
 };
+
+function setCookie(data) {
+	const stringData = JSON.stringify(data);
+	return (document.cookie = `cityData=${stringData}; max-age=9`);
+}
