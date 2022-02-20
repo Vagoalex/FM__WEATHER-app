@@ -10,8 +10,18 @@ const URL = {
 
 function renderTime(par) {
 	let date = new Date(par * 1000);
-	let timestr = `${date.getHours()}:${date.getMinutes()}`;
-	return timestr;
+	let dateHours = date.getHours();
+	let dateMinutes = date.getMinutes();
+	if (dateHours < 10) {
+		dateHours = `0${date.getHours()}`;
+	}
+	if (dateMinutes < 10) {
+		dateMinutes = `0${date.getMinutes()}`;
+	}
+	console.log(dateHours);
+	console.log(dateMinutes);
+	let timeStr = `${dateHours}:${dateMinutes}`;
+	return timeStr;
 }
 
 function showAlertEmptyInput(element) {
@@ -24,9 +34,9 @@ function showAlertEmptyInput(element) {
 function switchTabs() {
 	UI.GLOBAL.TAB_BTN.forEach(item => {
 		item.addEventListener('click', () => {
-			let currentTab = item;
-			let tabID = currentTab.getAttribute('data-tab');
-			let currentScreen = document.querySelector(tabID);
+			const currentTab = item;
+			const tabID = currentTab.getAttribute('data-tab');
+			const currentScreen = document.querySelector(tabID);
 
 			if (!currentTab.classList.contains('tab-active')) {
 				UI.GLOBAL.TAB_BTN.forEach(elem => {

@@ -1,5 +1,5 @@
 import { UI } from './UI.js';
-import { storage, favorList } from '../libs/storage.js';
+import { Storage, favorList } from '../Classes/Storage.js';
 import { fetchWeather, renderWeather } from '../libs/fetchWeather.js';
 export { addFavorites, displayCity, fetchOrDeleteCity };
 
@@ -9,7 +9,8 @@ function addFavorites() {
 	if (isEmptyInput) {
 		alert('This city is not valid!');
 	} else {
-		storage.setStorage(currentCity);
+		const storage = new Storage('favorCities', currentCity);
+		storage.set(currentCity);
 	}
 	displayCity();
 }
@@ -26,7 +27,9 @@ function displayCity() {
 function deleteCity(e) {
 	const currentCity = e.target.parentNode;
 	currentCity.remove();
-	storage.saveStorage([...favorList].filter(city => city !== currentCity.textContent));
+	const newStorage = [...favorList].filter(city => city !== currentCity.textContent);
+	const storage = new Storage('favorCities', currentCity, 'favoriteCity', newStorage);
+	storage.saveStorage();
 }
 
 function fetchOrDeleteCity() {

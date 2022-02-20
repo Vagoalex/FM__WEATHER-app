@@ -1,12 +1,13 @@
 import { UI } from './view/UI.js';
 import { showAlertEmptyInput, renderTime, switchTabs, URL } from './libs/helpers.js';
-import { storage, favorList } from './libs/storage.js';
+import { Storage, favorList } from './Classes/Storage.js';
 import { fetchWeather, renderWeather } from './libs/fetchWeather.js';
 import { addFavorites, displayCity, fetchOrDeleteCity } from './view/view.js';
 
 function startApp() {
 	switchTabs();
-	storage.getStorage().forEach(city => favorList.add(city));
+	const storage = new Storage('favorCities');
+	storage.get().forEach(city => favorList.add(city));
 	displayCity();
 	fetchOrDeleteCity();
 }

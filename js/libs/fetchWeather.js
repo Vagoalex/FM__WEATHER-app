@@ -1,6 +1,6 @@
 import { UI } from '../view/UI.js';
 import { renderTime, URL } from './helpers.js';
-import { storage, setCookie } from './storage.js';
+import { Storage, setCookie } from '../Classes/Storage.js';
 
 export async function fetchWeather(cityName) {
 	const url = `${URL.WEATHER}?q=${cityName}&appid=${URL.API_KEY}&units=metric`;
@@ -21,7 +21,8 @@ export async function fetchWeather(cityName) {
 			sunset: result.sys.sunset,
 		};
 		renderWeather(data);
-		storage.saveFavorCity(data);
+		const storage = new Storage('favorCities', data, 'favoriteCity');
+		storage.saveCity(data);
 		setCookie(data);
 	} catch (error) {
 		alert(error.message);
