@@ -1,7 +1,7 @@
 import { UI } from './UI.js';
 import { Storage, favorList } from '../Classes/Storage.js';
 import { fetchWeather, renderWeather } from '../libs/fetchWeather.js';
-export { addFavorites, displayCity, fetchOrDeleteCity };
+export { addFavorites, displayCity, deleteCity };
 
 function addFavorites() {
 	const currentCity = UI.NOW.NAME.textContent;
@@ -26,19 +26,13 @@ function displayCity() {
 
 function deleteCity(e) {
 	const currentCity = e.target.parentNode;
-	currentCity.remove();
-	const newStorage = [...favorList].filter(city => city !== currentCity.textContent);
-	const storage = new Storage('favorCities', currentCity, 'favoriteCity', newStorage);
-	storage.saveStorage();
-}
-
-function fetchOrDeleteCity() {
-	UI.GLOBAL.LOCATIONS.addEventListener('click', e => {
-		const cityDeleteSpan = e.target.tagName == 'SPAN';
-		if (!cityDeleteSpan) {
-			fetchWeather(e.target.textContent);
-		} else {
-			deleteCity(e);
+	// const newStorage = [...favorList].filter(city => city !== currentCity.textContent);
+	const newStorage = [...favorList].filter(city => {
+		if (city !== currentCity.textContent) {
+			return city;
 		}
 	});
+	const storage = new Storage('favorCities', currentCity, 'favoriteCity', newStorage);
+	storage.saveStorage();
+	currentCity.remove();
 }

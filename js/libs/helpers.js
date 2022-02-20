@@ -18,8 +18,6 @@ function renderTime(par) {
 	if (dateMinutes < 10) {
 		dateMinutes = `0${date.getMinutes()}`;
 	}
-	console.log(dateHours);
-	console.log(dateMinutes);
 	let timeStr = `${dateHours}:${dateMinutes}`;
 	return timeStr;
 }
