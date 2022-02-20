@@ -1,7 +1,7 @@
 import { UI } from './UI.js';
 import { Storage, favorList } from '../Classes/Storage.js';
 import { fetchWeather, renderWeather } from '../libs/fetchWeather.js';
-export { addFavorites, displayCity, deleteCity };
+export { addFavorites, displayCity, deleteCity, fetchFavorWeather };
 
 function addFavorites() {
 	const currentCity = UI.NOW.NAME.textContent;
@@ -16,23 +16,37 @@ function addFavorites() {
 }
 function displayCity() {
 	UI.GLOBAL.LOCATIONS.innerHTML = '';
-	// или же storage.getStorage();? снизу перед форычем
-	[...favorList].forEach(city => {
+	const storage = new Storage('favorCities');
+	storage.get().forEach(city => {
 		const newCity = `
 		<p class="city">${city}<span class="city-delete"></span></p>`;
 		UI.GLOBAL.LOCATIONS.insertAdjacentHTML('beforeend', newCity);
 	});
+	deleteCity();
 }
 
-function deleteCity(e) {
-	const currentCity = e.target.parentNode;
-	// const newStorage = [...favorList].filter(city => city !== currentCity.textContent);
-	const newStorage = [...favorList].filter(city => {
-		if (city !== currentCity.textContent) {
-			return city;
-		}
+function deleteCity() {
+	const removeCityBtn = document.querySelectorAll('.city-delete');
+	removeCityBtn.forEach(city => {
+		city.addEventListener('click', () => {
+			city.parentNode.remove();
+
+			const locationsCities = document.querySelectorAll('.city');
+			const newFavorCities = [...locationsCities].map(city => city.textContent);
+
+			const storage = new Storage('favorCities', undefined, 'favoriteCity', newFavorCities);
+
+			storage.saveStorage();
+		});
 	});
-	const storage = new Storage('favorCities', currentCity, 'favoriteCity', newStorage);
-	storage.saveStorage();
-	currentCity.remove();
+}
+
+function fetchFavorWeather(e) {
+	const cityDeleteSpan = e.target.tagName == 'SPAN';
+	const cityLocations = e.target.tagName == 'DIV';
+	if (!cityDeleteSpan && !cityLocations) {
+		fetchWeather(e.target.textContent);
+	} else if (cityDeleteSpan) {
+		return;
+	}
 }

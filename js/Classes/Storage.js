@@ -3,7 +3,7 @@ export { Storage, favorList, setCookie };
 let favorList = new Set();
 
 class Storage {
-	constructor(keyArray, city, keyCity, newArray) {
+	constructor(keyArray, city = undefined, keyCity, newArray) {
 		this.keyArray = keyArray;
 		this.city = city;
 		this.keyCity = keyCity;
