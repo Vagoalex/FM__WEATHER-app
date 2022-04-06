@@ -1,6 +1,6 @@
 import { UI } from './UI.js';
-import { Storage, favorList } from '../Classes/Storage.js';
-import { fetchWeather, renderWeather } from '../libs/fetchWeather.js';
+import { Storage } from '../Classes/Storage.js';
+import { fetchWeather } from '../libs/fetchWeather.js';
 export { addFavorites, displayCity, deleteCity, fetchFavorWeather };
 
 function addFavorites() {

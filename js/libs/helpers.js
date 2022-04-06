@@ -3,8 +3,8 @@ import { UI } from '../view/UI.js';
 export { showAlertEmptyInput, renderTime, switchTabs, URL };
 
 const URL = {
-	WEATHER: 'http://api.openweathermap.org/data/2.5/weather',
-	FORECAST: 'http://api.openweathermap.org/data/2.5/forecast',
+	WEATHER: 'https://api.openweathermap.org/data/2.5/weather',
+	FORECAST: 'https://api.openweathermap.org/data/2.5/forecast',
 	API_KEY: '0a2d47739719cf635e851d4466971dd4',
 };
 
